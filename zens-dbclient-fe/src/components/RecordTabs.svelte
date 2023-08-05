@@ -65,12 +65,12 @@
             class="tab-link-close-btn"
             on:click={() => deleteRecordTab(tab)}
           >
-            <XmarkIcon />
+            <XmarkIcon height="0.75rem" fill="#444" />
           </button>
         </div>
       {/each}
       <button class="add-tab-btn" on:click={() => navigate("/table")}>
-        <PlusIcon />
+        <PlusIcon height="1rem" fill="#444" />
       </button>
     </div>
     <div>
@@ -84,7 +84,7 @@
         class="connection-btn-list"
         on:click={() => navigate("/connection")}
       >
-        <WifiIcon />
+        <WifiIcon height="0.75rem" fill="#222" />
       </button>
     </div>
   </div>
@@ -153,7 +153,6 @@
     justify-content: center;
     align-items: center;
     transform: translateY(-50%);
-    color: #444;
   }
 
   .add-tab-btn {

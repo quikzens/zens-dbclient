@@ -6,6 +6,10 @@
   import CheckIcon from "../icons/CheckIcon.svelte";
   import SortIcon from "../icons/SortIcon.svelte";
   import { activeConnectionId } from "../stores/connections";
+  import SortDownIcon from "../icons/SortDownIcon.svelte";
+  import SortUpIcon from "../icons/SortUpIcon.svelte";
+  import FilterIcon from "../icons/FilterIcon.svelte";
+  import ConfigurationIcon from "../icons/ConfigurationIcon.svelte";
 
   export let table_name;
 
@@ -209,30 +213,12 @@
     <div class="configuration">
       <div class="filter-section">
         <button class="filter-btn" on:click={() => toggleShowFilterSetting()}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="1em"
-            viewBox="0 0 512 512"
-          >
-            <!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-            <path
-              d="M3.9 54.9C10.5 40.9 24.5 32 40 32H472c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9V448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6V320.9L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z"
-            />
-          </svg>
+          <FilterIcon height="1rem" fill="#888" />
           <span>Filters</span>
         </button>
         <div class="column-toggle-wrapper">
           <button class="column-btn" on:click={() => toggleShowColumnSetting()}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="1em"
-              viewBox="0 0 512 512"
-            >
-              <!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-              <path
-                d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
-              />
-            </svg>
+            <ConfigurationIcon height="1rem" fill="#888" />
             <span>Columns</span>
           </button>
           <div class="column-toggle {isShowColumnSetting ? 'is-active' : ''}">
@@ -244,7 +230,7 @@
                 >
                   <span class="column-toggle-icon">
                     {#if !column.is_hide}
-                      <CheckIcon />
+                      <CheckIcon height="1.1rem" fill="#777" />
                     {/if}
                   </span>
                   <span>
@@ -264,7 +250,7 @@
             on:click={() => prevPagination()}
             disabled={isPrevPageDisable}
           >
-            <ChevronLeftIcon />
+            <ChevronLeftIcon height="1.1rem" fill="#777" />
           </button>
           <div class="pagination-input">
             <input
@@ -281,7 +267,7 @@
             />
           </div>
           <button class="pagination-next-btn" on:click={() => nextPagination()}>
-            <ChevronRightIcon />
+            <ChevronRightIcon height="1.1rem" fill="#777" />
           </button>
         </div>
       </div>
@@ -307,13 +293,13 @@
                     bind:value={filterSetting.field}
                   >
                     {#each columns as column}
-                      <option value={column.column_name}
-                        >{column.column_name}</option
-                      >
+                      <option value={column.column_name}>
+                        {column.column_name}
+                      </option>
                     {/each}
                   </select>
                   <div class="filter-item-select-icon">
-                    <SortIcon />
+                    <SortIcon height="1rem" fill="#777" />
                   </div>
                 </div>
                 <div class="filter-item-select-wrapper">
@@ -327,7 +313,7 @@
                     {/each}
                   </select>
                   <div class="filter-item-select-icon">
-                    <SortIcon />
+                    <SortIcon height="1rem" fill="#777" />
                   </div>
                 </div>
                 {#if oneColumnOperators.includes(filterSetting.operator) || twoColumnOperators.includes(filterSetting.operator)}
@@ -351,14 +337,14 @@
                 class="filter-item-btn"
                 on:click={() => subtractFilterSetting(index)}
               >
-                <CircleMinusIcon />
+                <CircleMinusIcon height="0.9rem" fill="#777" />
               </button>
             </div>
           {/each}
         </div>
         <div class="filter-setting-submit">
           <button class="filter-item-btn" on:click={() => addFilterSetting()}>
-            <CirclePlusIcon />
+            <CirclePlusIcon height="0.9rem" fill="#777" />
           </button>
           <button
             type="submit"
@@ -391,25 +377,9 @@
 										{sortType !== '' && sortColumn === column.column_name ? sortType : ''}"
                     >
                       {#if sortType === "asc" && sortColumn === column.column_name}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 320 512"
-                        >
-                          <!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                          <path
-                            d="M182.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128z"
-                          />
-                        </svg>
+                        <SortDownIcon height="0.95rem" fill="#888" />
                       {:else if sortType === "desc" && sortColumn === column.column_name}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 320 512"
-                        >
-                          <!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                          <path
-                            d="M182.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z"
-                          />
-                        </svg>
+                        <SortUpIcon height="0.95rem" fill="#888" />
                       {/if}
                     </div>
                   </div>
@@ -609,11 +579,6 @@
     align-items: center;
   }
 
-  .pagination-prev-btn svg,
-  .pagination-next-btn svg {
-    height: 1.1rem;
-  }
-
   .table-container {
     width: 100vw;
     overflow: auto;
@@ -665,20 +630,16 @@
     align-items: center;
   }
 
-  .table-cell-icon svg {
-    position: absolute;
+  .table-cell-icon {
+    position: relative;
     width: 10px;
   }
 
-  .table-cell-icon.asc svg {
+  .table-cell-icon.asc {
     bottom: 4px;
   }
 
-  .table-cell-icon.desc svg {
+  .table-cell-icon.desc {
     top: 4px;
-  }
-
-  svg {
-    fill: #888;
   }
 </style>
