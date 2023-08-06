@@ -3,6 +3,7 @@
 ## v1.0
 
 - Initial publish release
+- Only PostgreSQL database is supported.
 - CRUD Connections
 - Open/managing multiple database connections
 - Close connection functionality
