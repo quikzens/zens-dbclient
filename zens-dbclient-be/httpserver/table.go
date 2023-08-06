@@ -65,7 +65,7 @@ func (h *Handler) GetTableRecords(w http.ResponseWriter, r *http.Request) {
 	var request getTableRecordsRequest
 	err = json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		h.writeError(w, entity.BadRequestError{Message: err.Error()})
+		h.writeError(w, entity.JSONBadRequestError{})
 		return
 	}
 

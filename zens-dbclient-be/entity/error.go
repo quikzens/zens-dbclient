@@ -1,7 +1,7 @@
 package entity
 
 type HttpError interface {
-	ToHttpError() (int, []HttpResponseError)
+	ToHttpError() (int, HttpResponseError)
 }
 
 type HttpResponseError struct {

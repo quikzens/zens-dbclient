@@ -27,10 +27,10 @@ type MetaResponse struct {
 }
 
 type Response struct {
-	Message string                     `json:"message,omitempty"`
-	Data    interface{}                `json:"data,omitempty"`
-	Errors  []entity.HttpResponseError `json:"errors,omitempty"`
-	Meta    MetaResponse               `json:"meta"`
+	Message string                   `json:"message,omitempty"`
+	Data    interface{}              `json:"data,omitempty"`
+	Error   entity.HttpResponseError `json:"error,omitempty"`
+	Meta    MetaResponse             `json:"meta"`
 }
 
 func (h *Handler) writeSuccessWithMessage(w http.ResponseWriter, data interface{}, message string, meta MetaResponse) {
@@ -59,12 +59,12 @@ func (h *Handler) writeSuccess(w http.ResponseWriter, data interface{}, meta Met
 }
 
 func (h *Handler) writeError(w http.ResponseWriter, err error) {
-	statusCode, httpErrors := h.translateError(err)
+	statusCode, httpError := h.translateError(err)
 	meta := MetaResponse{
 		HTTPCode: statusCode,
 	}
 	res := Response{
-		Errors: httpErrors,
+		Error: httpError,
 		Meta: MetaResponse{
 			HTTPCode: statusCode,
 		},
@@ -76,7 +76,7 @@ func (h *Handler) writeError(w http.ResponseWriter, err error) {
 	_, _ = w.Write(responseBody)
 }
 
-func (h *Handler) translateError(err error) (int, []entity.HttpResponseError) {
+func (h *Handler) translateError(err error) (int, entity.HttpResponseError) {
 	switch origErr := err.(type) {
 	case entity.HttpError:
 		return origErr.ToHttpError()
