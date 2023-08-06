@@ -2,8 +2,11 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"zens-db/entity"
+
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 func (u *Usecase) GetConnections(ctx context.Context) []entity.Connection {
@@ -12,7 +15,14 @@ func (u *Usecase) GetConnections(ctx context.Context) []entity.Connection {
 
 func (u *Usecase) CreateConnection(ctx context.Context, param entity.CreateConnectionParam) (entity.CreateConnectionResult, error) {
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", param.User, param.Password, param.Host, param.Port, param.DatabaseName)
-	db := u.initDbConnection(dsn)
+	db, err := u.initDbConnection(dsn)
+	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			return entity.CreateConnectionResult{}, errors.New(pgErr.Message)
+		}
+		return entity.CreateConnectionResult{}, err
+	}
 
 	connection := entity.Connection{
 		Client: db,

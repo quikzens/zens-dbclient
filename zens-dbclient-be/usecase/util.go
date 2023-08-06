@@ -5,12 +5,12 @@ import (
 	"gorm.io/gorm"
 )
 
-func (u *Usecase) initDbConnection(dsn string) *gorm.DB {
+func (u *Usecase) initDbConnection(dsn string) (*gorm.DB, error) {
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: true,
 	})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return db
+	return db, nil
 }
