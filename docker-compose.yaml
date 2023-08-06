@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  frontend:
+    build:
+      context: ./zens-dbclient-fe
+      dockerfile: Dockerfile
+    network_mode: "host"
+    ports:
+      - "8000:8000"
+    environment:
+      - VITE_API_ENDPOINT=http://localhost:5000
+    depends_on:
+      - backend
+  backend:
+    build:
+      context: ./zens-dbclient-be
+      dockerfile: Dockerfile
+    network_mode: "host"
+    environment:
+      - API_PORT=5000
