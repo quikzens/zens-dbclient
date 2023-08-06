@@ -197,7 +197,7 @@
         class="connection-modal-btn-close"
         on:click={() => closeConnectionModal()}
       >
-        <XmarkIcon />
+        <XmarkIcon height="0.75rem" fill="#555" />
       </button>
       <h3 class="connection-form-title">{connectionModalTitle}</h3>
       <form

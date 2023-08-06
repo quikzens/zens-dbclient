@@ -88,7 +88,7 @@
     <PowerOffIcon height="0.9rem" fill="#222" />
   </button>
   <button class="connection-btn-list" on:click={() => navigate("/connection")}>
-    <WifiIcon />
+    <WifiIcon height="0.75rem" fill="#222" />
   </button>
 </div>
 
