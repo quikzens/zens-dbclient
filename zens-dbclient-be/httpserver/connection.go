@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"zens-db/entity"
 	"zens-db/helper"
+	"zens-db/validator"
 )
 
 func (h *Handler) GetConnections(w http.ResponseWriter, r *http.Request) {
@@ -17,11 +18,21 @@ func (h *Handler) GetConnections(w http.ResponseWriter, r *http.Request) {
 }
 
 type createConnectionRequest struct {
-	Host         string `json:"host" validate:"required"`
-	Port         string `json:"port" validate:"required"`
-	DatabaseName string `json:"database_name" validate:"required"`
-	User         string `json:"user" validate:"required"`
-	Password     string `json:"password" validate:"required"`
+	Host         string `json:"host"`
+	Port         string `json:"port"`
+	DatabaseName string `json:"database_name"`
+	User         string `json:"user"`
+	Password     string `json:"password"`
+}
+
+func (r *createConnectionRequest) validate() (bool, map[string]string) {
+	v := validator.New()
+	v.Check(validator.StrRequired(r.Host), "host", "host must be provided")
+	v.Check(validator.StrRequired(r.Port), "port", "port must be provided")
+	v.Check(validator.StrRequired(r.DatabaseName), "database_name", "database_name must be provided")
+	v.Check(validator.StrRequired(r.User), "user", "user must be provided")
+	v.Check(validator.StrRequired(r.Password), "password", "password must be provided")
+	return v.Valid(), v.Errors
 }
 
 func (h *Handler) CreateConnection(w http.ResponseWriter, r *http.Request) {
@@ -31,6 +42,11 @@ func (h *Handler) CreateConnection(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
 		h.writeError(w, entity.JSONBadRequestError{})
+		return
+	}
+
+	if isValid, errs := request.validate(); !isValid {
+		h.writeValidationError(w, errs)
 		return
 	}
 
@@ -46,7 +62,7 @@ func (h *Handler) CreateConnection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.writeSuccess(w, result, MetaResponse{
+	h.writeSuccessWithMessage(w, result, "success create connection", MetaResponse{
 		HTTPCode: http.StatusOK,
 	})
 }
@@ -65,7 +81,7 @@ func (h *Handler) DeleteConnection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.writeSuccess(w, result, MetaResponse{
+	h.writeSuccessWithMessage(w, result, "success delete connection", MetaResponse{
 		HTTPCode: http.StatusOK,
 	})
 }

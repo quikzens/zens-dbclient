@@ -27,10 +27,11 @@ type MetaResponse struct {
 }
 
 type Response struct {
-	Message string                    `json:"message,omitempty"`
-	Data    interface{}               `json:"data,omitempty"`
-	Error   *entity.HttpResponseError `json:"error,omitempty"`
-	Meta    MetaResponse              `json:"meta"`
+	Message          string                    `json:"message,omitempty"`
+	Data             interface{}               `json:"data,omitempty"`
+	Error            *entity.HttpResponseError `json:"error,omitempty"`
+	ValidationErrors []entity.ValidationError  `json:"validation_errors,omitempty"`
+	Meta             MetaResponse              `json:"meta"`
 }
 
 func (h *Handler) writeSuccessWithMessage(w http.ResponseWriter, data interface{}, message string, meta MetaResponse) {
@@ -65,9 +66,29 @@ func (h *Handler) writeError(w http.ResponseWriter, err error) {
 	}
 	res := Response{
 		Error: &httpError,
-		Meta: MetaResponse{
-			HTTPCode: statusCode,
-		},
+		Meta:  meta,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(meta.HTTPCode)
+	responseBody, _ := json.Marshal(res)
+	_, _ = w.Write(responseBody)
+}
+
+func (h *Handler) writeValidationError(w http.ResponseWriter, errs map[string]string) {
+	validationErrs := make([]entity.ValidationError, 0)
+	for field, message := range errs {
+		validationErrs = append(validationErrs, entity.ValidationError{
+			Field:   field,
+			Message: message,
+		})
+	}
+	meta := MetaResponse{
+		HTTPCode: http.StatusUnprocessableEntity,
+	}
+	res := Response{
+		ValidationErrors: validationErrs,
+		Meta:             meta,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
