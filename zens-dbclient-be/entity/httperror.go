@@ -12,10 +12,7 @@ func (e BadRequestError) Error() string {
 }
 
 func (e BadRequestError) ToHttpError() (int, HttpResponseError) {
-	return http.StatusBadRequest, HttpResponseError{
-		Field:   e.Field,
-		Message: e.Message,
-	}
+	return http.StatusBadRequest, HttpResponseError(e)
 }
 
 type JSONBadRequestError struct{}

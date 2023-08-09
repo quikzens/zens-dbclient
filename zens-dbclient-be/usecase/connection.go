@@ -19,14 +19,8 @@ func (u *Usecase) CreateConnection(ctx context.Context, param entity.CreateConne
 	}
 
 	connection := entity.Connection{
-		Client: db,
-		Credential: entity.Credential{
-			Host:         param.Host,
-			Port:         param.Port,
-			DatabaseName: param.DatabaseName,
-			User:         param.User,
-			Password:     param.Password,
-		},
+		Client:     db,
+		Credential: entity.Credential(param),
 	}
 
 	return entity.CreateConnectionResult{
