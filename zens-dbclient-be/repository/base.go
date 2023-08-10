@@ -31,6 +31,10 @@ func (r *Repository) DeleteConnection(connectionId int) (int, error) {
 		return c.Id == connectionId
 	})
 
+	if connectionIdx < 0 {
+		return 0, entity.ConnectionNotFoundError{}
+	}
+
 	// close connection
 	conn, err := r.connections[connectionIdx].Client.DB()
 	if err != nil {

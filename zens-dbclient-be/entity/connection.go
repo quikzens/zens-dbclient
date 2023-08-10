@@ -1,6 +1,10 @@
 package entity
 
-import "gorm.io/gorm"
+import (
+	"net/http"
+
+	"gorm.io/gorm"
+)
 
 type Connection struct {
 	Id         int
@@ -14,4 +18,16 @@ type Credential struct {
 	DatabaseName string
 	User         string
 	Password     string
+}
+
+type ConnectionNotFoundError struct{}
+
+func (e ConnectionNotFoundError) Error() string {
+	return "connection not found"
+}
+
+func (e ConnectionNotFoundError) ToHttpError() (int, HttpResponseError) {
+	return http.StatusNotFound, HttpResponseError{
+		Message: e.Error(),
+	}
 }
