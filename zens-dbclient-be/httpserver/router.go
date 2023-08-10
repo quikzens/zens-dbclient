@@ -18,9 +18,7 @@ func NewRouter(h *Handler) chi.Router {
 		AllowCredentials: false,
 	}))
 
-	r.Get("/healthz", func(writer http.ResponseWriter, request *http.Request) {
-		_, _ = writer.Write([]byte("ok"))
-	})
+	r.Get("/health", h.Health)
 
 	r.Route("/connections", func(r chi.Router) {
 		r.Get("/", h.GetConnections)
