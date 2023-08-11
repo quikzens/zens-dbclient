@@ -13,6 +13,6 @@ func TestHealth(t *testing.T) {
 
 	code, _, body := ts.get(t, "/health")
 
-	assert.Equal(t, code, http.StatusOK)
-	assert.Equal(t, string(body), "ok")
+	assert.Equal(t, http.StatusOK, code)
+	assert.Equal(t, "ok", string(body))
 }

@@ -8,11 +8,23 @@ import (
 	"zens-db/validator"
 )
 
+type connectionResponse struct {
+	ConnectionID int    `json:"connection_id"`
+	Host         string `json:"host"`
+	Port         string `json:"port"`
+	User         string `json:"user"`
+	Password     string `json:"password"`
+	DatabaseName string `json:"database_name"`
+}
+
+type getConnectionsResponse []connectionResponse
+
 func (h *Handler) GetConnections(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	connections := h.usecase.GetConnections(ctx)
 
-	h.writeSuccess(w, serializeArray(connections, connectionResponse), MetaResponse{
+	resp := serializeArray(connections, serializeConnectionResponse)
+	h.writeSuccess(w, resp, MetaResponse{
 		HTTPCode: http.StatusOK,
 	})
 }
@@ -33,6 +45,10 @@ func (r *createConnectionRequest) validate() (bool, map[string]string) {
 	v.Check(validator.StrRequired(r.User), "user", "user must be provided")
 	v.Check(validator.StrRequired(r.Password), "password", "password must be provided")
 	return v.Valid(), v.Errors
+}
+
+type createConnectionResponse struct {
+	ConnectionId int `json:"connection_id"`
 }
 
 func (h *Handler) CreateConnection(w http.ResponseWriter, r *http.Request) {
@@ -62,9 +78,16 @@ func (h *Handler) CreateConnection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.writeSuccessWithMessage(w, result, "success create connection", MetaResponse{
+	resp := createConnectionResponse{
+		ConnectionId: result.ConnectionId,
+	}
+	h.writeSuccessWithMessage(w, resp, "success create connection", MetaResponse{
 		HTTPCode: http.StatusOK,
 	})
+}
+
+type deleteConnectionResponse struct {
+	ConnectionId int `json:"connection_id"`
 }
 
 func (h *Handler) DeleteConnection(w http.ResponseWriter, r *http.Request) {
@@ -81,20 +104,16 @@ func (h *Handler) DeleteConnection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.writeSuccessWithMessage(w, result, "success delete connection", MetaResponse{
+	resp := deleteConnectionResponse{
+		ConnectionId: result.ConnectionId,
+	}
+	h.writeSuccessWithMessage(w, resp, "success delete connection", MetaResponse{
 		HTTPCode: http.StatusOK,
 	})
 }
 
-func connectionResponse(c entity.Connection) interface{} {
-	return struct {
-		ConnectionID int    `json:"connection_id"`
-		Host         string `json:"host"`
-		Port         string `json:"port"`
-		User         string `json:"user"`
-		Password     string `json:"password"`
-		DatabaseName string `json:"database_name"`
-	}{
+func serializeConnectionResponse(c entity.Connection) connectionResponse {
+	return connectionResponse{
 		ConnectionID: c.Id,
 		Host:         c.Credential.Host,
 		Port:         c.Credential.Port,

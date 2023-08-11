@@ -9,11 +9,11 @@ type CreateConnectionParam struct {
 }
 
 type CreateConnectionResult struct {
-	ConnectionId int `json:"connection_id"`
+	ConnectionId int
 }
 
 type DeleteConnectionResult struct {
-	ConnectionId int `json:"connection_id"`
+	ConnectionId int
 }
 
 type GetTableRecordsParam struct {

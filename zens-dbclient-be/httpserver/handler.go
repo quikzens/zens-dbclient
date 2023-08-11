@@ -106,8 +106,8 @@ func (h *Handler) translateError(err error) (int, entity.HttpResponseError) {
 	}
 }
 
-func serializeArray[T any](array []T, serializeFunc func(source T) interface{}) interface{} {
-	res := make([]interface{}, 0, len(array))
+func serializeArray[Input any, Output any](array []Input, serializeFunc func(source Input) Output) []Output {
+	res := make([]Output, 0, len(array))
 	for _, a := range array {
 		res = append(res, serializeFunc(a))
 	}
