@@ -48,7 +48,7 @@ func buildOffsetQuery(offset int) string {
 func (r *Repository) getConnection(connectionId int) (*gorm.DB, error) {
 	connectionIndex := slices.IndexFunc(r.connections, func(c entity.Connection) bool { return c.Id == connectionId })
 	if connectionIndex < 0 {
-		return nil, fmt.Errorf("no connection with id: %d", connectionId)
+		return nil, entity.ConnectionNotFoundError{}
 	}
 	return r.connections[connectionIndex].Client, nil
 }

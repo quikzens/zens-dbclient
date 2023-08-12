@@ -9,6 +9,8 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+type getTablesResponse []string
+
 func (h *Handler) GetTables(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	connectionId, err := helper.GetUrlIntParam(r, "connection_id", "connection_id must be an integer")
@@ -23,10 +25,13 @@ func (h *Handler) GetTables(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.writeSuccess(w, tableNames, MetaResponse{
+	resp := tableNames
+	h.writeSuccess(w, resp, MetaResponse{
 		HTTPCode: http.StatusOK,
 	})
 }
+
+type getTableColumnsResponse []map[string]any
 
 func (h *Handler) GetTableColumns(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -43,7 +48,8 @@ func (h *Handler) GetTableColumns(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.writeSuccess(w, tableColumns, MetaResponse{
+	resp := tableColumns
+	h.writeSuccess(w, resp, MetaResponse{
 		HTTPCode: http.StatusOK,
 	})
 }
@@ -51,6 +57,8 @@ func (h *Handler) GetTableColumns(w http.ResponseWriter, r *http.Request) {
 type getTableRecordsRequest struct {
 	Conditions []entity.Condition `json:"conditions"`
 }
+
+type getTableRecordsResponse []map[string]any
 
 func (h *Handler) GetTableRecords(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -94,7 +102,8 @@ func (h *Handler) GetTableRecords(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.writeSuccess(w, result.Data, MetaResponse{
+	resp := result.Data
+	h.writeSuccess(w, resp, MetaResponse{
 		HTTPCode: http.StatusOK,
 		Total:    result.Total,
 		Limit:    result.Limit,
