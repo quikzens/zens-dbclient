@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -111,7 +112,6 @@ func TestGetConnections(t *testing.T) {
 	var resp getConnectionsHttpResponse
 	err := json.Unmarshal([]byte(body), &resp)
 	assert.Nil(t, err)
-	fmt.Println(resp)
 
 	// check response
 	assert.Len(t, resp.Data, 3)
@@ -122,17 +122,17 @@ type deleteConnectionHttpResponse struct {
 	Data deleteConnectionResponse `json:"data"`
 }
 
-func TestDeleteConnections(t *testing.T) {
+func TestDeleteConnection(t *testing.T) {
 	ts := newTestServer(t)
 	defer ts.Close()
 
 	// create connection
 	_, _, createConnectionResp := createConnection(ts, t, createConnectionRequests["valid"])
-	connectionId := createConnectionResp.Data.ConnectionId
+	connectionId := strconv.FormatInt(int64(createConnectionResp.Data.ConnectionId), 10)
 
 	tests := []struct {
 		name              string
-		connectionId      int
+		connectionId      string
 		wantCode          int
 		withRespDataCheck bool
 		respDataCheck     func(*testing.T, deleteConnectionResponse)
@@ -152,11 +152,23 @@ func TestDeleteConnections(t *testing.T) {
 			wantCode:          http.StatusNotFound,
 			withRespDataCheck: false,
 		},
+		{
+			name:              "Text Connection ID",
+			connectionId:      "non-number-string",
+			wantCode:          http.StatusBadRequest,
+			withRespDataCheck: false,
+		},
+		{
+			name:              "Negative Connection ID",
+			connectionId:      "-1",
+			wantCode:          http.StatusNotFound,
+			withRespDataCheck: false,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			code, _, body := ts.delete(t, fmt.Sprintf("/connections/%d", tt.connectionId))
+			code, _, body := ts.delete(t, fmt.Sprintf("/connections/%s", tt.connectionId))
 
 			// check status code
 			assert.Equal(t, tt.wantCode, code)
