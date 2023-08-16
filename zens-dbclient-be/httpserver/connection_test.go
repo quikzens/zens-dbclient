@@ -71,6 +71,12 @@ func TestCreateConnection(t *testing.T) {
 			wantCode:          http.StatusInternalServerError,
 			withRespDataCheck: false,
 		},
+		{
+			name:              "Empty Connection Credential",
+			reqBody:           createConnectionRequest{},
+			wantCode:          http.StatusUnprocessableEntity,
+			withRespDataCheck: false,
+		},
 	}
 
 	for _, tt := range tests {
