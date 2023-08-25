@@ -10,6 +10,7 @@
   import SortUpIcon from "../icons/SortUpIcon.svelte";
   import FilterIcon from "../icons/FilterIcon.svelte";
   import ConfigurationIcon from "../icons/ConfigurationIcon.svelte";
+  import RefreshIcon from "../icons/RefreshIcon.svelte";
 
   export let table_name;
 
@@ -212,6 +213,9 @@
   {#await getTableColumns() then columns}
     <div class="configuration">
       <div class="filter-section">
+        <button class="refresh-btn" on:click={() => refetchTableRecords()}>
+          <RefreshIcon height="1rem" fill="#888" />
+        </button>
         <button class="filter-btn" on:click={() => toggleShowFilterSetting()}>
           <FilterIcon height="1rem" fill="#888" />
           <span>Filters</span>
@@ -425,12 +429,17 @@
     gap: 0.7rem;
   }
 
+  .refresh-btn,
   .filter-btn,
   .column-btn {
     padding: 0.3rem 0.5rem;
     display: flex;
     gap: 0.3rem;
     align-items: center;
+  }
+
+  .refresh-btn {
+    padding: 0.3rem;
   }
 
   .column-toggle-wrapper {
